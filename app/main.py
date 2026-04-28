@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.routers.admin import router as admin_router
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +19,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(title="Research Lab Manager", lifespan=lifespan)
 
-# Routers will be registered here in later phases.
+app.include_router(admin_router)
 
 
 @app.get("/health")
