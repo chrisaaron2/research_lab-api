@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.routers.admin import router as admin_router
+from app.routers.equipment import router as equipment_router
 from app.routers.members import router as members_router
 from app.routers.projects import router as projects_router
 
@@ -24,6 +25,7 @@ app = FastAPI(title="Research Lab Manager", lifespan=lifespan)
 app.include_router(admin_router)
 app.include_router(members_router)
 app.include_router(projects_router)
+app.include_router(equipment_router)
 
 
 @app.get("/health")
