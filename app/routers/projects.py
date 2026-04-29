@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import require_admin
 from app.crud.projects import (
     create_project,
     delete_project,
@@ -24,10 +25,6 @@ from app.schemas.project import (
 
 
 router = APIRouter(tags=["projects"])
-
-
-async def require_admin_placeholder() -> None:
-    return None
 
 
 @router.get("/projects", response_model=list[ProjectResponse])
@@ -70,7 +67,7 @@ async def read_project(
     "/projects",
     response_model=ProjectResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def create_project_route(
     payload: ProjectCreate,
@@ -88,7 +85,7 @@ async def create_project_route(
 @router.put(
     "/projects/{pid}",
     response_model=ProjectResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def update_project_route(
     pid: int,
@@ -114,7 +111,7 @@ async def update_project_route(
 @router.delete(
     "/projects/{pid}",
     response_model=DeleteResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def delete_project_route(
     pid: int,

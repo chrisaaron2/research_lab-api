@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import require_admin
 from app.crud.equipment import (
     create_device,
     create_equipment,
@@ -39,10 +40,6 @@ from app.schemas.equipment import (
 
 
 router = APIRouter(tags=["equipment"])
-
-
-async def require_admin_placeholder() -> None:
-    return None
 
 
 @router.get("/equipment", response_model=list[EquipmentResponse])
@@ -89,7 +86,7 @@ async def read_equipment_detail(
     "/equipment",
     response_model=EquipmentResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def create_equipment_route(
     payload: EquipmentCreate,
@@ -101,7 +98,7 @@ async def create_equipment_route(
 @router.put(
     "/equipment/{eid}",
     response_model=EquipmentResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def update_equipment_route(
     eid: int,
@@ -120,7 +117,7 @@ async def update_equipment_route(
 @router.delete(
     "/equipment/{eid}",
     response_model=DeleteResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def delete_equipment_route(
     eid: int,
@@ -169,7 +166,7 @@ async def read_device_detail(
     "/devices",
     response_model=DeviceResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def create_device_route(
     payload: DeviceCreate,
@@ -187,7 +184,7 @@ async def create_device_route(
 @router.put(
     "/devices/{did}",
     response_model=DeviceResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def update_device_route(
     did: int,
@@ -213,7 +210,7 @@ async def update_device_route(
 @router.delete(
     "/devices/{did}",
     response_model=DeleteResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def delete_device_route(
     did: int,
@@ -256,7 +253,7 @@ async def read_usages(
     "/uses",
     response_model=UsageResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def create_usage_route(
     payload: UsageCreate,
@@ -274,7 +271,7 @@ async def create_usage_route(
 @router.put(
     "/uses/{mid}/{did}/{eid}",
     response_model=UsageResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def update_usage_route(
     mid: int,
@@ -295,7 +292,7 @@ async def update_usage_route(
 @router.delete(
     "/uses/{mid}/{did}/{eid}",
     response_model=DeleteResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def delete_usage_route(
     mid: int,

@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import require_admin
 from app.crud.members import (
     create_member,
     delete_member,
@@ -25,10 +26,6 @@ from app.schemas.member import (
 
 
 router = APIRouter(tags=["members"])
-
-
-async def require_admin_placeholder() -> None:
-    return None
 
 
 @router.get("/members", response_model=list[MemberResponse])
@@ -57,7 +54,7 @@ async def read_member(
     "/members",
     response_model=MemberResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def create_member_route(
     payload: MemberCreate,
@@ -75,7 +72,7 @@ async def create_member_route(
 @router.put(
     "/members/{mid}",
     response_model=MemberResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def update_member_route(
     mid: int,
@@ -101,7 +98,7 @@ async def update_member_route(
 @router.delete(
     "/members/{mid}",
     response_model=DeleteResponse,
-    dependencies=[Depends(require_admin_placeholder)],
+    dependencies=[Depends(require_admin)],
 )
 async def delete_member_route(
     mid: int,
