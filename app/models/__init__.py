@@ -4,7 +4,6 @@ from app.models.lab_member import Collaborator, Faculty, LabMember, MemberType, 
 from app.models.project import Grant, Project, Works
 from app.models.publication import Publication, Publishes
 
-
 __all__ = [
     "Base",
     "MemberType",

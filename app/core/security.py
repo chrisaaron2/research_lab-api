@@ -8,7 +8,6 @@ from passlib.context import CryptContext
 
 from app.schemas.auth import TokenPayload
 
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 

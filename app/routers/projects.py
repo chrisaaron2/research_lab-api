@@ -23,7 +23,6 @@ from app.schemas.project import (
     ProjectUpdate,
 )
 
-
 router = APIRouter(tags=["projects"])
 
 

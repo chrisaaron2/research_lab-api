@@ -20,7 +20,6 @@ from app.schemas.report import (
     TopPublicationYearResponse,
 )
 
-
 router = APIRouter(tags=["reports"])
 
 

@@ -24,7 +24,6 @@ from app.schemas.member import (
     MentorshipResponse,
 )
 
-
 router = APIRouter(tags=["members"])
 
 

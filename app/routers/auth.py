@@ -3,7 +3,6 @@ from fastapi import APIRouter, HTTPException, status
 from app.core.security import authenticate_admin, create_access_token
 from app.schemas.auth import LoginRequest, TokenResponse
 
-
 router = APIRouter(tags=["auth"])
 
 

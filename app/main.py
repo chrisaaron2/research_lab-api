@@ -11,7 +11,6 @@ from app.routers.members import router as members_router
 from app.routers.projects import router as projects_router
 from app.routers.reports import router as reports_router
 
-
 logger = logging.getLogger(__name__)
 
 

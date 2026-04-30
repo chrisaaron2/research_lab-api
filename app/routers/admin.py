@@ -8,7 +8,6 @@ from app.crud.seed import database_has_seed_data, run_seed_sql
 from app.db import get_db
 from app.schemas.admin import SeedResponse
 
-
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 

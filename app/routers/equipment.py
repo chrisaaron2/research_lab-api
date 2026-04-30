@@ -38,7 +38,6 @@ from app.schemas.equipment import (
     UsageUpdate,
 )
 
-
 router = APIRouter(tags=["equipment"])
 
 
