@@ -1,6 +1,6 @@
 import asyncio
 import os
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Generator
 from pathlib import Path
 
 import pytest
@@ -76,10 +76,10 @@ async def reset_and_seed_database() -> None:
     await engine.dispose()
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def setup_db() -> AsyncGenerator[None, None]:
-    await asyncio.to_thread(run_alembic_upgrade)
-    await reset_and_seed_database()
+@pytest.fixture(scope="session", autouse=True)
+def setup_db() -> Generator[None, None]:
+    run_alembic_upgrade()
+    asyncio.run(reset_and_seed_database())
     yield
 
 
