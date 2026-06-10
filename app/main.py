@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.equipment import router as equipment_router
+from app.routers.grants import router as grants_router
 from app.routers.members import router as members_router
 from app.routers.projects import router as projects_router
 from app.routers.reports import router as reports_router
@@ -36,6 +37,7 @@ app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(members_router)
 app.include_router(projects_router)
+app.include_router(grants_router)
 app.include_router(equipment_router)
 app.include_router(reports_router)
 

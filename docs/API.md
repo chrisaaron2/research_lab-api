@@ -61,6 +61,33 @@ Response:
 }
 ```
 
+## Grants
+
+Public routes:
+
+- `GET /grants`
+- `GET /grants?pid=1`
+- `GET /grants?agency=NSF`
+- `GET /grants/{gid}`
+
+Bearer token required:
+
+- `POST /grants`
+- `PUT /grants/{gid}`
+- `DELETE /grants/{gid}`
+
+Sample create body:
+
+```json
+{
+  "p_duration": "12 months",
+  "agency": "NSF",
+  "budget": "125000",
+  "start_date": "2026-04-27",
+  "pid": 1
+}
+```
+
 ## Members
 
 Public:

@@ -25,7 +25,7 @@ database access, JWT-protected write routes, integration tests, and CI.
 
 - Lab member management with student, faculty, and collaborator subtypes
 - Project management and project status tracking
-- Grant-funded project/member queries
+- Grant CRUD and grant-funded project/member queries
 - Equipment, device, and usage tracking
 - Active equipment users with project context
 - Publication and funding reports
