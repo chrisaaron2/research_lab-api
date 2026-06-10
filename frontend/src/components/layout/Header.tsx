@@ -1,16 +1,36 @@
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import { API_BASE_URL } from "../../api/client";
+import { API_BASE_URL, apiRequest } from "../../api/client";
+import { endpoints } from "../../api/endpoints";
+import type { HealthResponse } from "../../api/types";
 import { clearToken, isLoggedIn } from "../../auth/auth";
 import StatusBadge from "../ui/StatusBadge";
 
 export default function Header(): JSX.Element {
   const navigate = useNavigate();
+  const healthQuery = useQuery({
+    queryKey: ["health"],
+    queryFn: () => apiRequest<HealthResponse>(endpoints.health),
+    refetchInterval: 30000,
+  });
 
   function handleLogout(): void {
     clearToken();
     navigate("/login");
   }
+
+  const healthLabel = healthQuery.isLoading
+    ? "Checking API"
+    : healthQuery.data?.status === "ok"
+      ? "API online"
+      : "API offline";
+  const healthTone =
+    healthQuery.data?.status === "ok"
+      ? "success"
+      : healthQuery.isLoading
+        ? "neutral"
+        : "danger";
 
   return (
     <header className="top-header">
@@ -19,7 +39,7 @@ export default function Header(): JSX.Element {
         <p>Full-stack FastAPI + PostgreSQL admin dashboard</p>
       </div>
       <div className="header-status">
-        <StatusBadge label="API health pending" tone="neutral" />
+        <StatusBadge label={healthLabel} tone={healthTone} />
         <StatusBadge
           label={isLoggedIn() ? "Admin token saved" : "Read-only"}
           tone={isLoggedIn() ? "success" : "neutral"}

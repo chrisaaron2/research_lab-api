@@ -151,6 +151,50 @@
   color: #647482;
 }
 
+.metric-value {
+  display: block;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quick-link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.quick-link-card {
+  border: 1px solid #dce5eb;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1f2937;
+  font-weight: 700;
+  padding: 14px;
+  text-decoration: none;
+}
+
+.quick-link-card:hover {
+  border-color: #2bb3a3;
+  color: #0d6b54;
+}
+
+.checklist {
+  margin: 12px 0 0;
+  padding-left: 22px;
+}
+
+.checklist li {
+  margin: 6px 0;
+}
+
 .login-page {
   display: grid;
   min-height: 100vh;

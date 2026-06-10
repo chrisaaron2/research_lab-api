@@ -12,3 +12,5 @@ export type HealthResponse = {
   status: string;
   service: string;
 };
+
+export type CountableRecord = Record<string, unknown>;

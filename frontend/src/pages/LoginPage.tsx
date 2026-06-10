@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { apiRequest } from "../api/client";
 import { endpoints } from "../api/endpoints";
 import type { LoginRequest, TokenResponse } from "../api/types";
-import { setToken } from "../auth/auth";
+import { isLoggedIn, setToken } from "../auth/auth";
 
 export default function LoginPage(): JSX.Element {
   const navigate = useNavigate();
@@ -14,6 +15,12 @@ export default function LoginPage(): JSX.Element {
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
