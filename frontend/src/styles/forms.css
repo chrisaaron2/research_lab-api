@@ -1,0 +1,56 @@
+label {
+  display: grid;
+  gap: 6px;
+  color: #526474;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #cfd9e0;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.form-stack {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.form-error {
+  margin: 0;
+  color: #9b1c1c;
+}
+
+.button,
+.header-button {
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: 700;
+}
+
+.button.primary {
+  background: #1e8f83;
+  color: #ffffff;
+}
+
+.button.secondary {
+  background: #e7eef3;
+  color: #273846;
+}
+
+.button.danger {
+  background: #b42318;
+  color: #ffffff;
+}
+
+.header-button {
+  background: #10202f;
+  color: #ffffff;
+  padding: 7px 10px;
+}

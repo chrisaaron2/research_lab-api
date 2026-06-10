@@ -137,6 +137,33 @@ by `ADMIN_PASSWORD_HASH`.
 - FastAPI docs: `http://localhost:8000/docs`
 - Health check: `GET /health`
 
+## Frontend Demo Dashboard
+
+The demo dashboard lives in `frontend/` and runs separately from the FastAPI
+backend.
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Build the frontend with:
+
+```powershell
+npm run build
+```
+
+- Frontend URL: `http://localhost:5173`
+- Backend URL: `http://localhost:8000`
+- FastAPI docs: `http://localhost:8000/docs`
+- Override the API URL with `VITE_API_BASE_URL` if needed.
+
+Demo login:
+
+- Username: `admin`
+- Password: `admin123`
+
 ## Running Tests
 
 ```powershell
