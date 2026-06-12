@@ -73,7 +73,7 @@ export default function SystemStatusPage(): JSX.Element {
 
       <div className="card-grid">
         <Card description="Current backend test suite status." title="Testing">
-          <strong className="metric-value">36</strong>
+          <strong className="metric-value">63</strong>
           <p className="placeholder-text">Integration tests passing.</p>
         </Card>
         <Card description="Repository automation status." title="CI">
