@@ -28,7 +28,7 @@ database access, JWT-protected write routes, integration tests, and CI.
 - Grant CRUD and grant-funded project/member queries
 - Equipment, device, and usage tracking
 - Active equipment users with project context
-- Publication and funding reports
+- Publication CRUD, authorship management, and funding reports
 - JWT-protected write routes
 - Seed data loading
 - Integration tests and CI

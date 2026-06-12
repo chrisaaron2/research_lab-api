@@ -277,6 +277,44 @@ Update example:
 }
 ```
 
+## Publications
+
+Public routes:
+
+- `GET /publications`
+- `GET /publications?year=2024`
+- `GET /publications?venue=ICML`
+- `GET /publications?author_mid=1`
+- `GET /publications/{pubid}`
+- `GET /publications/{pubid}/authors`
+
+Bearer token required:
+
+- `POST /publications`
+- `PUT /publications/{pubid}`
+- `DELETE /publications/{pubid}`
+- `POST /publications/{pubid}/authors`
+- `DELETE /publications/{pubid}/authors/{mid}`
+
+Sample create body:
+
+```json
+{
+  "title": "Reliable Research Data Systems",
+  "venue": "VLDB",
+  "date": "2026-04-27",
+  "doi": "10.1234/research-data-systems"
+}
+```
+
+Sample add-author body:
+
+```json
+{
+  "mid": 1
+}
+```
+
 ## Reports
 
 Public:

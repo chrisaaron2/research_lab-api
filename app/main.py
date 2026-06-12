@@ -11,6 +11,7 @@ from app.routers.equipment import router as equipment_router
 from app.routers.grants import router as grants_router
 from app.routers.members import router as members_router
 from app.routers.projects import router as projects_router
+from app.routers.publications import router as publications_router
 from app.routers.reports import router as reports_router
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ app.include_router(members_router)
 app.include_router(projects_router)
 app.include_router(grants_router)
 app.include_router(equipment_router)
+app.include_router(publications_router)
 app.include_router(reports_router)
 
 
