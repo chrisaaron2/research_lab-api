@@ -1,207 +1,186 @@
 # Research Lab Manager API
 
-A FastAPI + PostgreSQL backend for managing research lab members, projects,
-grants, equipment, device usage, publications, and reports.
+A FastAPI and PostgreSQL backend for managing a research lab's members, projects, grants, equipment usage, and publications. It started as a database systems course project and grew into a backend I keep as a portfolio piece: async SQLAlchemy models, JWT-protected write routes, reporting endpoints, deterministic seed data, integration tests, CI, and Dockerized local development.
 
-This project is built as a production-style backend portfolio project with async
-database access, JWT-protected write routes, integration tests, and CI.
+## Overview
 
-## Tech Stack
+The system models a research lab as a relational database and exposes it through a REST API. Members (students, faculty, and collaborators) work on projects, projects are funded by grants, equipment contains devices, members log usage of those devices, and publications track authorship across the lab. Read routes are public; write routes require an admin token.
 
-- Python
-- FastAPI
-- PostgreSQL
-- SQLAlchemy 2.x async ORM
-- Alembic
-- Pydantic
-- JWT auth with python-jose
-- Passlib/bcrypt
-- Docker Compose
-- Pytest
-- Ruff
-- GitHub Actions
+The backend is the completed core of the project. A React admin frontend is in early development and is covered under Roadmap.
+
+## Why I built it
+
+The original CS 631 (Databases) assignment asked for a practical system with sample data and useful operations: project and member management, equipment usage tracking, and grant and publication reporting. I wanted more than a schema with a few queries, so I rebuilt it as a real API with migrations, an auth layer, tests, and CI. It was a focused way to practice async FastAPI and relational design from the database up.
 
 ## Features
 
-- Lab member management with student, faculty, and collaborator subtypes
-- Project management and project status tracking
-- Grant CRUD and grant-funded project/member queries
-- Equipment, device, and usage tracking
-- Active equipment users with project context
-- Publication CRUD, authorship management, and funding reports
-- JWT-protected write routes
-- Seed data loading
-- Integration tests and CI
+- Members API with student, faculty, and collaborator subtypes and a self-referential mentor relationship
+- Projects, grants, equipment, devices, and equipment-usage records with full CRUD
+- Publications with authorship management (add and remove authors per publication)
+- Reporting endpoints using joins, grouping, aggregation, and date filtering
+- JWT authentication with public reads and admin-only writes
+- Deterministic seed data for a fully populated demo database
+- Integration test suite and GitHub Actions CI
+- Docker Compose setup for local Postgres and the API
 
-## Project Structure
+## Tech Stack
 
-```text
+- **API and runtime:** Python, FastAPI, Pydantic
+- **Data:** PostgreSQL 16, SQLAlchemy 2.x (async), Alembic
+- **Auth:** JWT via python-jose, password hashing via passlib/bcrypt
+- **Testing and tooling:** Pytest, pytest-asyncio, httpx (ASGITransport), Ruff
+- **Infrastructure:** Docker, Docker Compose, GitHub Actions
+
+## Architecture
+
+```
 app/
-  models/
-  schemas/
-  crud/
-  routers/
-  core/
-alembic/
-seed/
-tests/
-.github/workflows/
+  main.py            FastAPI app, router registration, health endpoint, CORS
+  db.py              async engine and session dependency
+  core/security.py   JWT, password hashing, admin dependency
+  models/            SQLAlchemy ORM models
+  schemas/           Pydantic request and response models
+  crud/              data access and business logic
+  routers/           route definitions per resource
+alembic/             database migrations
+seed/                SQL seed data
+tests/               integration tests
+docs/                API reference and development notes
 ```
 
-- `app/`: FastAPI application package.
-- `app/models/`: SQLAlchemy ORM models.
-- `app/schemas/`: Pydantic request and response models.
-- `app/crud/`: Database query and mutation logic.
-- `app/routers/`: API route definitions.
-- `app/core/`: Shared core helpers such as JWT security.
-- `alembic/`: Database migration environment.
-- `seed/`: Deterministic sample SQL data.
-- `tests/`: Async integration tests.
-- `.github/workflows/`: GitHub Actions CI workflow.
+Routers stay thin and delegate to the `crud` layer, which holds the queries and business rules. Pydantic schemas define request and response shapes; SQLAlchemy models define the tables and relationships.
 
-## Environment Variables
+## Data Model
 
-Required variables:
+Core tables and how they relate:
 
-```env
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/lab_db
-SECRET_KEY=replace-with-generated-secret
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD_HASH=replace-with-bcrypt-hash
-```
+- `LAB_MEMBER` holds shared member fields. `STUDENT`, `FACULTY`, and `COLLABORATOR` are subtype tables with one-to-one links back to it. `LAB_MEMBER` also references itself for mentorship.
+- `PROJECT` connects to members through the `WORKS` association table.
+- `GRANT` links funding to a project.
+- `EQUIPMENT` owns `DEVICE` records. `USES` tracks which member used which device, keyed by member, device, and equipment.
+- `PUBLICATION` connects to authors through `PUBLISHES`.
 
-`.env` is local only and must not be committed. `.env.example` contains
-placeholder values. Use host `db` when the FastAPI app runs inside Docker
-Compose. Use `localhost` only for local commands or tests that run directly from
-your machine.
+Schema changes are managed with Alembic. The seed dataset loads 18 members (6 students, 6 faculty, 6 collaborators), 8 mentorships, 8 projects, 10 grants, 12 equipment records, 20 devices, 30 usage records, and 25 publications, along with the association rows.
 
-## Local Setup
+## API Surface
 
-```powershell
-git clone <repository-url>
-cd research_lab
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-docker compose up -d --build
-```
+Routes are grouped by resource. GET routes are public; POST, PUT, and DELETE require an admin token.
 
-## Database Setup
+- **Health:** service status
+- **Auth:** login for an admin token
+- **Members:** list, detail, members by grant, project mentorships, plus admin CRUD
+- **Projects:** list, detail, status, plus admin CRUD
+- **Equipment:** list, detail, active users, plus admin CRUD
+- **Devices:** list, detail, plus admin CRUD
+- **Uses:** list and active-only filter, plus admin create, update, and delete by member/device/equipment
+- **Grants:** list with filters (by project, by agency), detail, plus admin CRUD
+- **Publications:** list with filters (year, venue, author), detail, authors, plus admin CRUD and author management
+- **Reports:** see below
+- **Admin seed:** load the seed dataset
 
-PostgreSQL runs through Docker Compose. Alembic manages schema migrations.
-
-```powershell
-alembic upgrade head
-```
-
-After authentication is configured, seed data is loaded through
-`POST /admin/seed` with a Bearer token. See the Authentication section below for
-a PowerShell example. Tests reset and seed the database automatically.
+Full request and response details are in [docs/API.md](docs/API.md).
 
 ## Authentication
 
-Public `GET` routes do not require auth. `POST`, `PUT`, and `DELETE` routes
-require a Bearer token.
+`POST /auth/login` returns a JWT. Send it as `Authorization: Bearer <token>` on write routes. Public GET routes need no token. A non-admin token is rejected on protected routes, and a missing token returns 401.
 
-Login endpoint:
+## Reports
 
-```text
-POST /auth/login
-```
+- `GET /reports/top-funded-projects`: projects ranked by total grant funding
+- `GET /reports/top-mentors-by-publications`: mentors ranked by their mentees' publication counts
+- `GET /reports/student-publications-by-major-year`: student publication counts grouped by major and year
+- `GET /reports/projects-ended-before?date=YYYY-MM-DD`: projects that ended before a given date
+- `GET /reports/top-publication-years`: years ranked by publication count
 
-PowerShell example:
+## Testing
 
-```powershell
-$login = Invoke-RestMethod `
-  -Method Post `
-  -Uri http://localhost:8000/auth/login `
-  -ContentType "application/json" `
-  -Body '{"username":"admin","password":"admin123"}'
-
-$headers = @{ Authorization = "Bearer $($login.access_token)" }
-
-Invoke-RestMethod `
-  -Method Post `
-  -Uri http://localhost:8000/admin/seed `
-  -Headers $headers
-```
-
-`admin/admin123` is only a local example. The actual admin password is controlled
-by `ADMIN_PASSWORD_HASH`.
-
-## Running the API
-
-- API base URL: `http://localhost:8000`
-- FastAPI docs: `http://localhost:8000/docs`
-- Health check: `GET /health`
-
-## Frontend Demo Dashboard
-
-The demo dashboard lives in `frontend/` and runs separately from the FastAPI
-backend.
+The suite has 63 integration tests covering auth, members, projects, equipment, devices, usage, grants, publications and authorship, and reports. They run against the app through httpx's ASGITransport, so they exercise the real routing and database layer.
 
 ```powershell
-cd frontend
-npm install
-npm run dev
+python -m pytest -v
 ```
 
-Build the frontend with:
+One known warning comes from python-jose calling `datetime.utcnow` internally. It does not affect results; moving to PyJWT is on the roadmap.
+
+## Local Development
+
+Developed on Windows with PowerShell. The Docker and Python commands are the same across platforms; adjust the virtual environment activation line for your shell.
 
 ```powershell
-npm run build
-```
+# Clone and enter the project
+git clone https://github.com/<you>/research_lab-api.git
+cd research_lab-api
 
-- Frontend URL: `http://localhost:5173`
-- Backend URL: `http://localhost:8000`
-- FastAPI docs: `http://localhost:8000/docs`
-- Override the API URL with `VITE_API_BASE_URL` if needed.
+# Create a virtual environment for local tooling (ruff, pytest)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 
-Demo login:
+# Configure environment
+copy .env.example .env
+# set SECRET_KEY and ADMIN_PASSWORD_HASH in .env
 
-- Username: `admin`
-- Password: `admin123`
+# Start PostgreSQL and the API
+docker compose up -d
 
-## Running Tests
+# Apply migrations, then load seed data
+alembic upgrade head
+# seed via POST /admin/seed (see docs/API.md) or seed/seed.sql
 
-```powershell
+# Lint and test
 ruff check app tests
 python -m pytest -v
 ```
 
-Current test suite:
+The API runs at `http://localhost:8000` with interactive docs at `/docs`.
 
-- 36 integration tests
-- Auth, members, projects, equipment/devices/uses, and reports
+## Example Requests
 
-## CI
+```bash
+# Log in and capture a token
+curl -s -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "<your-password>"}'
 
-GitHub Actions runs on `push` and `pull_request`. The workflow starts
-PostgreSQL 16, installs dependencies, runs Ruff, and runs pytest.
+# Public read
+curl "http://localhost:8000/publications?year=2024"
 
-## Main API Areas
+# Admin write (request body shapes are in docs/API.md)
+curl -X POST http://localhost:8000/members \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
 
-- Auth: login and JWT creation
-- Admin: seed data loading
-- Members: lab members and subtypes
-- Projects: project CRUD and status
-- Equipment: equipment inventory
-- Devices: physical device records
-- Uses: member usage of devices/equipment
-- Reports: grant funding and publication analytics
+## Documentation
 
-## Notes / Known Warnings
+- [docs/API.md](docs/API.md): full API reference
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): local development notes
 
-`python-jose` may emit a `datetime.utcnow` deprecation warning during tests. The
-warning comes from the dependency and does not fail the test suite.
+## Current Status
 
-## Future Improvements
+- **Backend API:** complete through members, projects, equipment, devices, usage, grants, publications and authorship, reporting, auth, tests, CI, and docs.
+- **Frontend admin dashboard:** in early development.
+- **Deployment:** runs locally; not yet hosted.
 
-- Minimal UI dashboard
-- Role-based users beyond a single admin
-- Deployment
-- More granular permissions
-- Pagination and filtering enhancements
-- Coverage threshold
+## Roadmap
+
+- Build out the React admin pages for projects, grants, equipment, devices, usage, publications, and reports
+- Add pagination and server-side search to list endpoints
+- Add audit logging for admin changes
+- Add finer-grained, role-based permissions
+- Replace python-jose with PyJWT to clear the deprecation warning
+- Deploy the backend and frontend
+- Add dashboard charts once the admin pages are in place
+
+## What This Demonstrates
+
+- Relational schema design with subtype and association tables
+- Async FastAPI development with a clean router, schema, and CRUD separation
+- SQLAlchemy ORM modeling and Alembic migrations
+- PostgreSQL query design for reports: joins, grouping, aggregation, and date filtering
+- JWT-protected routes with a public read and admin write split
+- CRUD workflows with validation and dependency handling
+- Deterministic seed data for reproducible local runs
+- Integration testing and GitHub Actions CI
+- Dockerized local development
