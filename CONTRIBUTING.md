@@ -19,10 +19,10 @@ Notes on how the project is organized and the conventions I follow when working 
 - Keep database work in `app/crud/`, not in routers.
 - Every endpoint returns a Pydantic response model.
 - Raise `HTTPException` with the right status code:
-  - `400` for invalid input or a bad foreign key reference
-  - `401` when no valid token is supplied
-  - `403` when a token is valid but lacks admin rights
+  - `401` for any auth failure: a missing, invalid, or expired token, or a valid token without the admin role
   - `404` when a resource does not exist
+  - `400` for business-rule violations raised from `crud`, such as a reference to a non-existent foreign key or a duplicate authorship
+  - FastAPI returns `422` automatically when a request body fails schema validation
 - Never hardcode secrets. Configuration comes from `.env`.
 
 ## Auth model
