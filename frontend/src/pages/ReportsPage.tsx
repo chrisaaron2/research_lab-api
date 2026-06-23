@@ -10,8 +10,8 @@ export default function ReportsPage(): JSX.Element {
       </div>
       <Card title="Reports workspace">
         <p className="placeholder-text">
-          UI Phase 5 will add report tables, simple Recharts visualizations, date
-          filters, and one-line SQL concept explanations.
+          Reporting views are in progress. This page will add report tables,
+          simple charts, and date filters over the backend reporting endpoints.
         </p>
       </Card>
     </section>

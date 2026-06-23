@@ -10,8 +10,9 @@ export default function ProjectsPage(): JSX.Element {
       </div>
       <Card title="Projects workspace">
         <p className="placeholder-text">
-          UI Phase 3 will add project tables, status filters, detail panels,
-          leader selectors, full create/edit/delete, and status cards.
+          Project management is in progress. It will show project tables with
+          status filters, detail panels, and status cards, plus admin create,
+          edit, and delete actions.
         </p>
       </Card>
     </section>

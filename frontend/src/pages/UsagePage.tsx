@@ -10,8 +10,8 @@ export default function UsagePage(): JSX.Element {
       </div>
       <Card title="Usage workspace">
         <p className="placeholder-text">
-          UI Phase 4 will add active-only filters, member/device/equipment
-          selectors, usage forms, and relationship error handling.
+          Usage management is in progress. It will add active-only filters,
+          member, device, and equipment selectors, and usage forms.
         </p>
       </Card>
     </section>

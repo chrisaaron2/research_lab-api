@@ -10,8 +10,8 @@ import { isLoggedIn, setToken } from "../auth/auth";
 export default function LoginPage(): JSX.Element {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginRequest>({
-    username: "admin",
-    password: "admin123",
+    username: "",
+    password: "",
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,7 +47,7 @@ export default function LoginPage(): JSX.Element {
         <div className="page-heading">
           <span>Admin access</span>
           <h1>Research Lab Manager</h1>
-          <p>Sign in to manage demo data and protected write routes.</p>
+          <p>Sign in to manage records and protected write routes.</p>
         </div>
         <form className="form-stack" onSubmit={handleSubmit}>
           <label>

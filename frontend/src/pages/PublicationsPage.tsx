@@ -8,10 +8,10 @@ export default function PublicationsPage(): JSX.Element {
         <h2>Publications</h2>
         <p>Review publication reporting and student publication trends.</p>
       </div>
-      <Card title="Publication planning note">
+      <Card title="Publications workspace">
         <p className="placeholder-text">
-          Full Publication CRUD is a planned backend extension. Current UI will
-          start with publication reporting views.
+          Publication management is in progress. It will start with publication
+          reporting views, then add admin create, edit, and authorship actions.
         </p>
       </Card>
     </section>

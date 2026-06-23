@@ -8,10 +8,11 @@ export default function GrantsPage(): JSX.Element {
         <h2>Grants</h2>
         <p>Explore grant-funded project and member relationships.</p>
       </div>
-      <Card title="Grant planning note">
+      <Card title="Grants workspace">
         <p className="placeholder-text">
-          Full Grant CRUD is a planned backend extension. Current UI will start
-          with grant-funded member lookup and funding reports.
+          Grant management is in progress. It will start with grant-funded member
+          lookup and funding reports, then add admin create, edit, and delete
+          actions.
         </p>
       </Card>
     </section>

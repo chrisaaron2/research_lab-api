@@ -10,8 +10,9 @@ export default function EquipmentPage(): JSX.Element {
       </div>
       <Card title="Equipment workspace">
         <p className="placeholder-text">
-          UI Phase 4 will add equipment tables, detail panels, active users,
-          and create/edit/delete flows.
+          Equipment management is in progress. It will show equipment tables,
+          detail panels, and active users, plus admin create, edit, and delete
+          actions.
         </p>
       </Card>
     </section>

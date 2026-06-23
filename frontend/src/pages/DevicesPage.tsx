@@ -10,8 +10,8 @@ export default function DevicesPage(): JSX.Element {
       </div>
       <Card title="Devices workspace">
         <p className="placeholder-text">
-          UI Phase 4 will add device tables, status badges, equipment selectors,
-          and protected create/edit/delete actions.
+          Device management is in progress. It will list devices with status and
+          equipment filters, plus admin create, edit, and delete actions.
         </p>
       </Card>
     </section>

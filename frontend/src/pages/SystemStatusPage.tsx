@@ -82,7 +82,7 @@ export default function SystemStatusPage(): JSX.Element {
       </div>
 
       <Card
-        description="High-level implementation summary for portfolio review."
+        description="High-level implementation summary."
         title="Engineering Summary"
       >
         <div className="table-wrap">

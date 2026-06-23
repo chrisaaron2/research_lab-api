@@ -84,7 +84,7 @@ export default function DashboardPage(): JSX.Element {
       <div className="page-heading">
         <span>Overview</span>
         <h2>Dashboard</h2>
-        <p>Portfolio admin dashboard for the Research Lab Manager API.</p>
+        <p>Admin dashboard for the Research Lab Manager API.</p>
       </div>
 
       {isLoading ? <LoadingState message="Loading dashboard data..." /> : null}
@@ -132,7 +132,7 @@ export default function DashboardPage(): JSX.Element {
       </div>
 
       <Card
-        description="Jump to the main demo workflows."
+        description="Jump to the main sections."
         title="Quick Navigation"
       >
         <div className="quick-link-grid">
